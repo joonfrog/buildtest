@@ -1,0 +1,21 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.netflix.nebula:gradle-netflixoss-project-plugin:2.2.0-SNAPSHOT'
+    }
+}
+
+apply plugin: 'nebula.netflixoss'
+apply plugin: 'java'
+
+bintray.pkg.repo = 'BuildTesting' // used for testing
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    testCompile 'junit:junit:4.+'
+}
