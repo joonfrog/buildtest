@@ -31,9 +31,9 @@ ContentsService contentsService = new ContentsService(client);
 def x = repoService.getOrgRepositories(orgName)
     .findAll { matchRepository(regexs, it.name) }
 
-println x
+println x.collect { it.name }
 
-println x.findAll { matchGradle(contentsService, it) }
+println x.findAll { matchGradle(contentsService, it) }.collect { it.name }
 
 def y = x.findAll { matchGradle(contentsService, it, /apply plugin: ('|")nebula.netflixoss('|")/) }
 
@@ -118,7 +118,8 @@ boolean matchGradle(ContentsService contentsService, repo, match = null) {
         def content = allContents.iterator().next()
         def bytes = EncodingUtils.fromBase64(content.content)
         String str = new String(bytes, 'UTF-8');
-        return match ? (str ==~ match) : true
+        println str
+        return match ? (str =~ match) as Boolean : true
     } catch (Exception fnfe) { // RequestException
         return false
     }
