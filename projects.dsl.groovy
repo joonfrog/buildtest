@@ -37,7 +37,7 @@ println x.findAll { matchGradle(contentsService, it) }.collect { it.name }
 
 def y = x.findAll { matchGradle(contentsService, it, /apply plugin: ('|")nebula.netflixoss('|")/) }
 
-println y
+println y.collect { it.name }
 
     y.each { Repository repo ->
     def repoName = repo.name
@@ -118,7 +118,6 @@ boolean matchGradle(ContentsService contentsService, repo, match = null) {
         def content = allContents.iterator().next()
         def bytes = EncodingUtils.fromBase64(content.content)
         String str = new String(bytes, 'UTF-8');
-        println str
         return match ? (str =~ match) as Boolean : true
     } catch (Exception fnfe) { // RequestException
         return false
@@ -217,7 +216,6 @@ def pullrequest(nameBase, repoDesc, orgName, repoName, branchName) {
     def job = base(repoDesc, orgName, repoName, branchName)
     job.with {
         name "${nameBase}-pull-requests"
-        label 'hi-speed'
         steps {
             gradle('clean check --stacktrace --refresh-dependencies')
         }
