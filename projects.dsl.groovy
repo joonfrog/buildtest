@@ -25,21 +25,13 @@ folder {
 List<Pattern> regexs = getRepoPattern(props, githubProperties)
 
 // All work will be done inside this folder
-RepositoryService repoService = new RepositoryService(client);
-ContentsService contentsService = new ContentsService(client);
+RepositoryService repoService = new RepositoryService(client)
+ContentsService contentsService = new ContentsService(client)
 
 def x = repoService.getOrgRepositories(orgName)
     .findAll { matchRepository(regexs, it.name) }
-
-println x.collect { it.name }
-
-println x.findAll { matchGradle(contentsService, it) }.collect { it.name }
-
-def y = x.findAll { matchGradle(contentsService, it, /apply plugin: ('|")nebula.netflixoss('|")/) }
-
-println y.collect { it.name }
-
-    y.each { Repository repo ->
+    .findAll { matchGradle(contentsService, it, /apply plugin: ('|")nebula.netflixoss('|")/) }
+    .each { Repository repo ->
     def repoName = repo.name
     def description = "${repo.description} - http://github.com/$orgName/$repoName"
 
@@ -117,7 +109,7 @@ boolean matchGradle(ContentsService contentsService, repo, match = null) {
         def allContents = contentsService.getContents(repo, "build.gradle")
         def content = allContents.iterator().next()
         def bytes = EncodingUtils.fromBase64(content.content)
-        String str = new String(bytes, 'UTF-8');
+        String str = new String(bytes, 'UTF-8')
         return match ? (str =~ match) as Boolean : true
     } catch (Exception fnfe) { // RequestException
         return false
@@ -134,7 +126,7 @@ def base(String repoDesc, String orgName, String repoName, String branchName, bo
                 absolute(20)
             }
             if (linkPrivate) {
-                sshAgent('d79432e3-42d8-48df-a99f-5a3693d3b1fe')
+                sshAgent('700013e9-869d-4118-9453-a2087608cdc3')
             }
         }
         jdk('Oracle JDK 1.7 (latest)')
@@ -155,7 +147,7 @@ def base(String repoDesc, String orgName, String repoName, String branchName, bo
                 fi
     
                 rm -f \$HOME/.gradle/gradle.properties
-                ln -s /private/netflixoss/reactivex/gradle.properties \$HOME/.gradle/gradle.properties
+                ln -s /private/netflixoss/Netflix/gradle.properties \$HOME/.gradle/gradle.properties
                 # Get us a tracking branch
                 git checkout $branchName || git checkout -b $branchName
                 git reset --hard origin/$branchName
@@ -185,7 +177,7 @@ def snapshot(nameBase, repoDesc, orgName, repoName, branchName) {
         name "${nameBase}-snapshot"
 
         steps {
-            gradle('clean devSnapshot --stacktrace --refresh-dependencies')
+            gradle('clean snapshot --stacktrace --refresh-dependencies')
         }
         configure { project ->
             project / triggers / 'com.cloudbees.jenkins.GitHubPushTrigger' / spec
