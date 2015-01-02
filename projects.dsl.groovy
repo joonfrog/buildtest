@@ -129,7 +129,7 @@ def base(String repoDesc, String orgName, String repoName, String branchName, bo
                 sshAgent('700013e9-869d-4118-9453-a2087608cdc3')
             }
         }
-        jdk('Oracle JDK 1.7 (latest)')
+        jdk('Oracle JDK 7u60')
         scm {
             github("${orgName}/${repoName}", branchName, 'ssh') {
                 if (linkPrivate) {
@@ -195,7 +195,7 @@ def release(nameBase, repoDesc, orgName, repoName, branchName) {
             choiceParam("scope", ["minor", "patch", "major"], "What is the scope of this change?")
 
             // Stage
-            choiceParam("stage", ["devSnapshot", "candidate", "final"], "Which stage should this be published as?")
+            choiceParam("stage", ["candidate", "final"], "Which stage should this be published as?")
         }
 
         steps {
@@ -205,7 +205,7 @@ def release(nameBase, repoDesc, orgName, repoName, branchName) {
 }
 
 def pullrequest(nameBase, repoDesc, orgName, repoName, branchName) {
-    def job = base(repoDesc, orgName, repoName, branchName)
+    def job = base(repoDesc, orgName, repoName, branchName, false)
     job.with {
         name "${nameBase}-pull-requests"
         steps {

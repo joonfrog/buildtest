@@ -19,4 +19,8 @@ public class Example {
 	public String sayHi(String name) {
 		return "Hi " + name;
 	}
+
+	public String foo() {
+		return "bar";
+	}
 }
