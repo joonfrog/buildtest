@@ -13,6 +13,13 @@ apply plugin: 'java'
 group = 'com.netflix.buildinfrastructure'
 bintray.pkg.repo = 'BuildTesting' // used for testing
 
+contacts {
+    "rob.spieldenner@gmail.com" {
+        moniker "Rob Spieldenner"
+        github "rspieldenner"
+    }
+}
+
 repositories {
     jcenter()
 }
