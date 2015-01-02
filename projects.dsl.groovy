@@ -205,7 +205,7 @@ def release(nameBase, repoDesc, orgName, repoName, branchName) {
 }
 
 def pullrequest(nameBase, repoDesc, orgName, repoName, branchName) {
-    def job = base(repoDesc, orgName, repoName, branchName)
+    def job = base(repoDesc, orgName, repoName, branchName, false)
     job.with {
         name "${nameBase}-pull-requests"
         steps {
