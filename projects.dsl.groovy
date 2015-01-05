@@ -114,6 +114,7 @@ boolean matchGradle(ContentsService contentsService, repo, match = null) {
         def content = allContents.iterator().next()
         def bytes = EncodingUtils.fromBase64(content.content)
         String str = new String(bytes, 'UTF-8')
+        println str
         return match ? (str =~ match) as Boolean : true
     } catch (Exception fnfe) { // RequestException
         return false
