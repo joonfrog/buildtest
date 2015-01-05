@@ -28,14 +28,10 @@ List<Pattern> regexs = getRepoPattern(props, githubProperties)
 RepositoryService repoService = new RepositoryService(client)
 ContentsService contentsService = new ContentsService(client)
 
-def x = repoService.getOrgRepositories(orgName)
+repoService.getOrgRepositories(orgName)
     .findAll { matchRepository(regexs, it.name) }
-println x.collect { it.name }
-
-def y = x.findAll { matchGradle(contentsService, it, /apply plugin: ('|")nebula.netflixoss('|")/) }
-println y.collect { it.name }
-
-    y.each { Repository repo ->
+    .findAll { matchGradle(contentsService, it, /nebula.netflixoss/) }
+    .each { Repository repo ->
     def repoName = repo.name
     def description = "${repo.description} - http://github.com/$orgName/$repoName"
 
@@ -114,7 +110,6 @@ boolean matchGradle(ContentsService contentsService, repo, match = null) {
         def content = allContents.iterator().next()
         def bytes = EncodingUtils.fromBase64(content.content)
         String str = new String(bytes, 'UTF-8')
-        println str
         return match ? (str =~ match) as Boolean : true
     } catch (Exception fnfe) { // RequestException
         return false
