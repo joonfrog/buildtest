@@ -30,8 +30,12 @@ ContentsService contentsService = new ContentsService(client)
 
 def x = repoService.getOrgRepositories(orgName)
     .findAll { matchRepository(regexs, it.name) }
-    .findAll { matchGradle(contentsService, it, /apply plugin: ('|")nebula.netflixoss('|")/) }
-    .each { Repository repo ->
+println x.collect { it.name }
+
+def y = x.findAll { matchGradle(contentsService, it, /apply plugin: ('|")nebula.netflixoss('|")/) }
+println y.collect { it.name }
+
+    y.each { Repository repo ->
     def repoName = repo.name
     def description = "${repo.description} - http://github.com/$orgName/$repoName"
 
