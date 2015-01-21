@@ -201,6 +201,12 @@ def release(nameBase, repoDesc, orgName, repoName, branchName) {
         steps {
             gradle('clean $stage -Prelease.scope=$scope --stacktrace --refresh-dependencies')
         }
+        publishers {
+            archiveArtifacts {
+                pattern('build/netflixoss/netflixoss.txt')
+                latestOnly()
+            }
+        }
     }
 }
 
