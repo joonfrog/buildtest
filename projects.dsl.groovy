@@ -45,8 +45,8 @@ repoService.getOrgRepositories(orgName)
         def nameBase = "${repoFolderName}/${repoName}"
 
         String str = readFile(contentsService, repo, '.netflixoss')
-        def props = new Properties()
-        props.load(new StringReader(str))
+        def netflixOssProps = new Properties()
+        netflixOssProps.load(new StringReader(str))
 
 
         List<RepositoryBranch> branches = repoService.getBranches(repo)
@@ -58,7 +58,7 @@ repoService.getOrgRepositories(orgName)
             // TODO Permission global group
         }
 
-        def isGitflow = Boolean.valueOf(props.getProperty('gitflow', 'false'))
+        def isGitflow = Boolean.valueOf(netflixOssProps.getProperty('gitflow', 'false'))
         if (isGitflow) {
             if (branches.find { it.name == 'develop' }) {
                 snapshot(nameBase, description, orgName, repoName, 'develop')
@@ -73,7 +73,7 @@ repoService.getOrgRepositories(orgName)
             }   
         }
 
-        def shouldCreatePullRequest = Boolean.valueOf(props.getProperty('pullrequest'), 'true')
+        def shouldCreatePullRequest = Boolean.valueOf(netflixOssProps.getProperty('pullrequest'), 'true')
         if (shouldCreatePullRequest) {
             pullrequest(nameBase, description, orgName, repoName, '*' )
         }
