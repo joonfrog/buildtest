@@ -73,7 +73,7 @@ repoService.getOrgRepositories(orgName)
             }   
         }
 
-        def shouldCreatePullRequest = Boolean.valueOf(netflixOssProps.getProperty('pullrequest'), 'true')
+        def shouldCreatePullRequest = Boolean.valueOf(netflixOssProps.getProperty('pullrequest', 'true'))
         if (shouldCreatePullRequest) {
             pullrequest(nameBase, description, orgName, repoName, '*' )
         }
