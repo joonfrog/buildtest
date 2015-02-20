@@ -32,33 +32,52 @@ repoService.getOrgRepositories(orgName)
     .findAll { matchRepository(regexs, it.name) }
     .findAll { matchGradle(contentsService, it, /nebula.netflixoss/) }
     .each { Repository repo ->
-    def repoName = repo.name
-    def description = "${repo.description} - http://github.com/$orgName/$repoName"
+        def repoName = repo.name
+        def description = "${repo.description} - http://github.com/$orgName/$repoName"
 
-    println "Creating jobs for $repoName"
+        println "Creating jobs for $repoName"
 
-    def repoFolderName = "${parentFolderName}/${repoName}"
-    folder {
-        name repoFolderName
+        def repoFolderName = "${parentFolderName}/${repoName}"
+        folder {
+            name repoFolderName
+        }
+
+        def nameBase = "${repoFolderName}/${repoName}"
+
+        String str = readFile(contentsService, repo, '.netflixoss')
+        def props = new Properties()
+        props.load(new StringReader(str))
+
+
+        List<RepositoryBranch> branches = repoService.getBranches(repo)
+        def gradleBranches = branches.findAll { it.name.endsWith('.x') }
+        gradleBranches.collect { RepositoryBranch branch ->
+            snapshot("${nameBase}-${branch.name}", description, orgName, repoName, branch.name)
+            release("${nameBase}-${branch.name}", description, orgName, repoName, branch.name)
+            // TODO Find github contrib group, and permission each user to the job.
+            // TODO Permission global group
+        }
+
+        def isGitflow = Boolean.valueOf(props.getProperty('gitflow', 'false'))
+        if (isGitflow) {
+            if (branches.find { it.name == 'develop' }) {
+                snapshot(nameBase, description, orgName, repoName, 'develop')
+            }
+            if (branches.find { it.name == 'master'}) {
+                release(nameBase, description, orgName, repoName, 'master')
+            } 
+        } else {
+            if (branches.find { it.name == 'master'}) {
+                snapshot(nameBase, description, orgName, repoName, 'master')
+                release(nameBase, description, orgName, repoName, 'master')
+            }   
+        }
+
+        def shouldCreatePullRequest = Boolean.valueOf(props.getProperty('pullrequest'), 'true')
+        if (shouldCreatePullRequest) {
+            pullrequest(nameBase, description, orgName, repoName, '*' )
+        }
     }
-
-    def nameBase = "${repoFolderName}/${repoName}"
-
-    List<RepositoryBranch> branches = repoService.getBranches(repo)
-    def gradleBranches = branches.findAll { it.name.endsWith('.x') }
-    gradleBranches.collect { RepositoryBranch branch ->
-        snapshot("${nameBase}-${branch.name}", description, orgName, repoName, branch.name)
-        release("${nameBase}-${branch.name}", description, orgName, repoName, branch.name)
-        // TODO Find github contrib group, and permission each user to the job.
-        // TODO Permission global group
-    }
-
-    if (branches.find { it.name == 'master'}) {
-        snapshot(nameBase, description, orgName, repoName, 'master')
-        release(nameBase, description, orgName, repoName, 'master')
-    }
-    pullrequest(nameBase, description, orgName, repoName, '*' )
-}
 
 def String loadParentFolderName(Properties props, githubProperties) {
     def parentFolderName = props['jenkinsFolder']
@@ -232,4 +251,16 @@ String ellipsize(String input, int maxLength) {
     return input
   }
   return input.substring(0, maxLength) + '...'
+}
+
+String readFile(contentsService, repo, filename) {
+    try {
+        def allContents = contentsService.getContents(repo, filename)
+        def content = allContents.iterator().next()
+        def bytes = EncodingUtils.fromBase64(content.content)
+        
+        return new String(bytes, 'UTF-8')
+    } catch (Exception fnfe) { // RequestException
+        return ''
+    }
 }
