@@ -63,7 +63,10 @@ repoService.getOrgRepositories(orgName)
             if (branches.find { it.name == 'develop' }) {
                 snapshot(nameBase, description, orgName, repoName, 'develop')
             }
-            candidateGitflow(nameBase, description, orgName, repoName, 'release/*')
+            def releaseBranches = branches.findAll { it.name.startsWith('release') }
+            releaseBranches.collect { RepositoryBranch branch ->
+                candidateGitflow(nameBase, description, orgName, repoName, branch.name)
+            }
             if (branches.find { it.name == 'master'}) {
                 releaseGitflow(nameBase, description, orgName, repoName, 'master')
             } 
@@ -74,7 +77,7 @@ repoService.getOrgRepositories(orgName)
             }   
         }
 
-        def shouldCreatePullRequest = Boolean.valueOf(netflixOssProps.getProperty('pullrequest', 'true'))
+        def shouldCreatePullRequest = Boolean.valueOf(netflixOssProps.getProperty('pullrequest_cloudbees', 'true'))
         if (shouldCreatePullRequest) {
             pullrequest(nameBase, description, orgName, repoName, '*' )
         }
