@@ -63,8 +63,9 @@ repoService.getOrgRepositories(orgName)
             if (branches.find { it.name == 'develop' }) {
                 snapshot(nameBase, description, orgName, repoName, 'develop')
             }
+            candidateGitflow(nameBase, description, orgName, repoName, 'release/*')
             if (branches.find { it.name == 'master'}) {
-                release(nameBase, description, orgName, repoName, 'master')
+                releaseGitflow(nameBase, description, orgName, repoName, 'master')
             } 
         } else {
             if (branches.find { it.name == 'master'}) {
@@ -219,6 +220,40 @@ def release(nameBase, repoDesc, orgName, repoName, branchName) {
 
         steps {
             gradle('clean $stage -Prelease.scope=$scope --stacktrace --refresh-dependencies')
+        }
+        publishers {
+            archiveArtifacts {
+                pattern('build/netflixoss/netflixoss.txt')
+                latestOnly()
+            }
+        }
+    }
+}
+
+def candidateGitflow(nameBase, repoDesc, orgName, repoName, branchName) {
+    def job = base(repoDesc, orgName, repoName, branchName)
+    job.with {
+        name "${nameBase}-candidate"
+
+        steps {
+            gradle('clean candidate --stacktrace --refresh-dependencies')
+        }
+        publishers {
+            archiveArtifacts {
+                pattern('build/netflixoss/netflixoss.txt')
+                latestOnly()
+            }
+        }
+    }
+}
+
+def releaseGitflow(nameBase, repoDesc, orgName, repoName, branchName) {
+    def job = base(repoDesc, orgName, repoName, branchName)
+    job.with {
+        name "${nameBase}-release"
+
+        steps {
+            gradle('clean final -Prelease.useLastTag=true --stacktrace --refresh-dependencies')
         }
         publishers {
             archiveArtifacts {
