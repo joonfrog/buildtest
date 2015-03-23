@@ -52,8 +52,8 @@ repoService.getOrgRepositories(orgName)
         List<RepositoryBranch> branches = repoService.getBranches(repo)
         def gradleBranches = branches.findAll { it.name.endsWith('.x') }
         gradleBranches.collect { RepositoryBranch branch ->
-            snapshot("${nameBase}-${branch.name}", description, orgName, repoName, branch.name)
-            release("${nameBase}-${branch.name}", description, orgName, repoName, branch.name)
+            snapshot(netflixOssProps, "${nameBase}-${branch.name}", description, orgName, repoName, branch.name)
+            release(netflixOssProps, "${nameBase}-${branch.name}", description, orgName, repoName, branch.name)
             // TODO Find github contrib group, and permission each user to the job.
             // TODO Permission global group
         }
