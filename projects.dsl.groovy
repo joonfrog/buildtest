@@ -140,7 +140,7 @@ boolean matchGradle(ContentsService contentsService, repo, match = null) {
 }
 
 def base(Properties netflixOssProps, String repoDesc, String orgName, String repoName, String branchName, boolean linkPrivate = true) {
-    int timeout = Integer.parseInt(netflixOssProps.getProperty('timeout_minutes', '20'))
+    int timeoutMinutes = Integer.parseInt(netflixOssProps.getProperty('timeout_minutes', '20'))
 
     job {
         description ellipsize(repoDesc, 255)
@@ -148,7 +148,7 @@ def base(Properties netflixOssProps, String repoDesc, String orgName, String rep
         label 'hi-speed'
         wrappers {
             timeout {
-                absolute(timeout)
+                absolute(timeoutMinutes)
             }
             if (linkPrivate) {
                 sshAgent('700013e9-869d-4118-9453-a2087608cdc3')
