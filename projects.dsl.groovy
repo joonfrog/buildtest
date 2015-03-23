@@ -190,7 +190,7 @@ def base(Properties netflixOssProps, String repoDesc, String orgName, String rep
                 project / buildWrappers / 'com.cloudbees.jenkins.forge.WebDavMounter'(plugin:"cloudbees-forge-plugin@1.6")
             }
         }
-        if (Boolean.valueOf(netflixOssProps.getProperty('has_test_reports', 'true')) {
+        if (Boolean.valueOf(netflixOssProps.getProperty('has_test_reports', 'true'))) {
             publishers {
                 archiveJunit('**/build/test-results/TEST*.xml')
             }
