@@ -61,25 +61,25 @@ repoService.getOrgRepositories(orgName)
         def isGitflow = Boolean.valueOf(netflixOssProps.getProperty('gitflow', 'false'))
         if (isGitflow) {
             if (branches.find { it.name == 'develop' }) {
-                snapshot(nameBase, description, orgName, repoName, 'develop')
+                snapshot(netflixOssProps, nameBase, description, orgName, repoName, 'develop')
             }
             def releaseBranches = branches.findAll { it.name.startsWith('release') }
             releaseBranches.collect { RepositoryBranch branch ->
-                candidateGitflow(nameBase, description, orgName, repoName, branch.name)
+                candidateGitflow(netflixOssProps, nameBase, description, orgName, repoName, branch.name)
             }
             if (branches.find { it.name == 'master'}) {
-                releaseGitflow(nameBase, description, orgName, repoName, 'master')
+                releaseGitflow(netflixOssProps, nameBase, description, orgName, repoName, 'master')
             } 
         } else {
             if (branches.find { it.name == 'master'}) {
-                snapshot(nameBase, description, orgName, repoName, 'master')
-                release(nameBase, description, orgName, repoName, 'master')
+                snapshot(netflixOssProps, nameBase, description, orgName, repoName, 'master')
+                release(netflixOssProps, nameBase, description, orgName, repoName, 'master')
             }   
         }
 
         def shouldCreatePullRequest = Boolean.valueOf(netflixOssProps.getProperty('pullrequest_cloudbees', 'true'))
         if (shouldCreatePullRequest) {
-            pullrequest(nameBase, description, orgName, repoName, '*' )
+            pullrequest(netflixOssProps, nameBase, description, orgName, repoName, '*' )
         }
     }
 
@@ -139,20 +139,22 @@ boolean matchGradle(ContentsService contentsService, repo, match = null) {
     }
 }
 
-def base(String repoDesc, String orgName, String repoName, String branchName, boolean linkPrivate = true) {
+def base(Properties netflixOssProps, String repoDesc, String orgName, String repoName, String branchName, boolean linkPrivate = true) {
+    int timeout = Integer.parseInt(netflixOssProps.getProperty('timeout_minutes', '20'))
+
     job {
         description ellipsize(repoDesc, 255)
         logRotator(60,-1,-1,20)
         label 'hi-speed'
         wrappers {
             timeout {
-                absolute(20)
+                absolute(timeout)
             }
             if (linkPrivate) {
                 sshAgent('700013e9-869d-4118-9453-a2087608cdc3')
             }
         }
-        jdk('Oracle JDK 7u60')
+        jdk('Oracle JDK 1.7 (latest)')
         scm {
             github("${orgName}/${repoName}", branchName, 'ssh') {
                 if (linkPrivate) {
@@ -188,14 +190,16 @@ def base(String repoDesc, String orgName, String repoName, String branchName, bo
                 project / buildWrappers / 'com.cloudbees.jenkins.forge.WebDavMounter'(plugin:"cloudbees-forge-plugin@1.6")
             }
         }
-        publishers {
-            archiveJunit('**/build/test-results/TEST*.xml')
+        if (Boolean.valueOf(netflixOssProps.getProperty('has_test_reports', 'true')) {
+            publishers {
+                archiveJunit('**/build/test-results/TEST*.xml')
+            }
         }
     }
 }
 
-def snapshot(nameBase, repoDesc, orgName, repoName, branchName) {
-    def job = base(repoDesc, orgName, repoName, branchName)
+def snapshot(Properties netflixOssProps, nameBase, repoDesc, orgName, repoName, branchName) {
+    def job = base(netflixOssProps, repoDesc, orgName, repoName, branchName)
     job.with {
         name "${nameBase}-snapshot"
 
@@ -208,8 +212,8 @@ def snapshot(nameBase, repoDesc, orgName, repoName, branchName) {
     }
 }
 
-def release(nameBase, repoDesc, orgName, repoName, branchName) {
-    def job = base(repoDesc, orgName, repoName, branchName)
+def release(Properties netflixOssProps, nameBase, repoDesc, orgName, repoName, branchName) {
+    def job = base(netflixOssProps, repoDesc, orgName, repoName, branchName)
     job.with {
         name "${nameBase}-release"
 
@@ -233,8 +237,8 @@ def release(nameBase, repoDesc, orgName, repoName, branchName) {
     }
 }
 
-def candidateGitflow(nameBase, repoDesc, orgName, repoName, branchName) {
-    def job = base(repoDesc, orgName, repoName, branchName)
+def candidateGitflow(Properties netflixOssProps, nameBase, repoDesc, orgName, repoName, branchName) {
+    def job = base(netflixOssProps, repoDesc, orgName, repoName, branchName)
     job.with {
         name "${nameBase}-candidate"
 
@@ -250,8 +254,8 @@ def candidateGitflow(nameBase, repoDesc, orgName, repoName, branchName) {
     }
 }
 
-def releaseGitflow(nameBase, repoDesc, orgName, repoName, branchName) {
-    def job = base(repoDesc, orgName, repoName, branchName)
+def releaseGitflow(Properties netflixOssProps, nameBase, repoDesc, orgName, repoName, branchName) {
+    def job = base(netflixOssProps, repoDesc, orgName, repoName, branchName)
     job.with {
         name "${nameBase}-release"
 
@@ -267,8 +271,8 @@ def releaseGitflow(nameBase, repoDesc, orgName, repoName, branchName) {
     }
 }
 
-def pullrequest(nameBase, repoDesc, orgName, repoName, branchName) {
-    def job = base(repoDesc, orgName, repoName, branchName, false)
+def pullrequest(Properties netflixOssProps, nameBase, repoDesc, orgName, repoName, branchName) {
+    def job = base(netflixOssProps, repoDesc, orgName, repoName, branchName, false)
     job.with {
         name "${nameBase}-pull-requests"
         steps {
