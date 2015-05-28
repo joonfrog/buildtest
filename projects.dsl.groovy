@@ -196,9 +196,7 @@ def base(Properties netflixOssProps, String repoDesc, String orgName, String rep
             }
         }
         String envProps = netflixOssProps.getProperty('environment_variables', '')
-        println envProps
         Map<Object, Object> envVariables = parseEnvVariables(envProps)
-        println envVariables
         if (envVariables) { 
             environmentVariables(envVariables)
         }
