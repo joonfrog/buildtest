@@ -195,7 +195,7 @@ def base(Properties netflixOssProps, String repoDesc, String orgName, String rep
                 archiveJunit('**/build/test-results/TEST*.xml')
             }
         }
-        String envProps = netflixOssProps.getProperty('environment_variables', ''))
+        String envProps = netflixOssProps.getProperty('environment_variables', '')
         println envProps
         Map<Object, Object> envVariables = parseEnvVariables(envProps)
         println envVariables
