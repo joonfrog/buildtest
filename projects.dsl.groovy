@@ -154,7 +154,11 @@ def base(Properties netflixOssProps, String repoDesc, String orgName, String rep
                 sshAgent('700013e9-869d-4118-9453-a2087608cdc3')
             }
         }
-        jdk('Oracle JDK 1.7 (latest)')
+
+        String requestedJdk = netflixOssProps.getProperty('jdk', '1.7')
+        String buildJdk = "Oracle JDK ${requestedJdk} (latest)"
+
+        jdk(buildJdk)
         scm {
             github("${orgName}/${repoName}", branchName, 'ssh') {
                 if (linkPrivate) {
