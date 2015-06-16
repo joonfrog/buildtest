@@ -155,7 +155,17 @@ def base(Properties netflixOssProps, String repoDesc, String orgName, String rep
             }
         }
 
-        String requestedJdk = netflixOssProps.getProperty('jdk', '1.7')
+        String requestedJdk
+        switch (netflixOssProps.getProperty('jdk', '1.7')) {
+            case ['1.7', '7']:
+                requestedJdk = '1.7'
+                break
+            case ['1.8', '8']:
+                requestedJdk = '8'
+                break
+            default:
+                requestedJdk = '1.7'
+        }
         String buildJdk = "Oracle JDK ${requestedJdk} (latest)"
 
         jdk(buildJdk)
