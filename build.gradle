@@ -10,7 +10,6 @@ plugins {
 
 allprojects {
   group = 'com.netflix.buildinfrastructure'
-  bintray.pkg.repo = 'BuildTesting' // used for testing
 }
 
 subprojects {
@@ -27,3 +26,4 @@ subprojects {
   }
 }
 
+bintray.pkg.repo = 'BuildTesting' // used for testing
