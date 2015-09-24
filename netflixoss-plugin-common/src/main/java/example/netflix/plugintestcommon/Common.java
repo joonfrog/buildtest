@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Netflix, Inc.
+ * Copyright 2015 Netflix, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package example.netflix.plugintest;
+package example.netflix.plugintestcommon;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-
-public class ExampleTest {
-    @Test
-    public void canaryTest() {
-        Example example = new Example();
-        assertEquals("Hi test", example.sayHi("test"));
-    }
+public class Common {
+  public String message(String name) {
+    return "Hello " + name;
+  }
 }

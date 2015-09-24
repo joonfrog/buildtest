@@ -1,0 +1,5 @@
+{
+  "com.netflix.buildinfrastructure:netflixoss-plugin-common": { "project": true },
+  "com.netflix.buildinfrastructure:netflixoss-plugin-test": { "project": true },
+  "junit:junit": { "locked": "4.12", "firstLevelTransitive": [ "com.netflix.buildinfrastructure:netflixoss-plugin-common", "com.netflix.buildinfrastructure:netflixoss-plugin-test" ] }
+}

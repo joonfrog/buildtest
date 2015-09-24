@@ -1,6 +1,7 @@
-v0.5.0 - 2015-09-12
+v0.5.0 - 2015-09-24
 ===================
 
+* trying multiproject
 * update to new release process
 
 v0.4.0 - ??

@@ -15,6 +15,8 @@
  */
 package example.netflix.plugintest;
 
+import example.netflix.plugintestcommon.Common;
+
 public class Example {
 	public String sayHi(String name) {
 		return "Hi " + name;
@@ -22,5 +24,9 @@ public class Example {
 
 	public String foo() {
 		return "bar";
+	}
+
+	public String message(String name) {
+		return new Common().message(name);
 	}
 }
