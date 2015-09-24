@@ -26,4 +26,6 @@ subprojects {
   }
 }
 
-bintray.pkg.repo = 'BuildTesting' // used for testing
+allprojects {
+  bintray.pkg.repo = 'BuildTesting' // used for testing
+}
