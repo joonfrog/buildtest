@@ -48,6 +48,9 @@ repoService.getOrgRepositories(orgName)
         def netflixOssProps = new Properties()
         netflixOssProps.load(new StringReader(str))
 
+        if (Boolean.valueOf(netflixOssProps.getProperty('cloudbees_disabled', 'false'))) {
+            return // don't generate jobs if disabled
+        }
 
         List<RepositoryBranch> branches = repoService.getBranches(repo)
         def gradleBranches = branches.findAll { it.name.endsWith('.x') }
