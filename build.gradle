@@ -25,6 +25,30 @@ subprojects {
   repositories {
     jcenter()
   }
+
+  if (project.hasProperty('internalUrl') && project.hasProperty('internalUser') && project.hasProperty('internalCredential')) {
+    publishing {
+      repositories {
+        maven {
+          name 'internal'
+          url project.property('internalUrl')
+          credentials {
+            username project.property('internalUser')
+            password project.property('internalCredential')
+          }
+        }
+      }
+    }
+
+    afterEvaluate {
+      tasks.withType(com.jfrog.bintray.gradle.BintrayUploadTask) { t ->
+          t.enabled = false
+      }
+      tasks.withType(org.jfrog.gradle.plugin.artifactory.task.BuildInfoBaseTask) { t ->
+          t.enabled = false
+      }
+    }
+  }
 }
 
 allprojects {
