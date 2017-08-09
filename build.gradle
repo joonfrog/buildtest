@@ -10,7 +10,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'com.netflix.nebula:gradle-netflixoss-project-plugin:4.0.0-rc.4'
+    classpath 'com.netflix.nebula:gradle-netflixoss-project-plugin:4.0.0-rc.1'
   }
 }
 
@@ -36,5 +36,5 @@ subprojects {
 }
 
 allprojects {
-  bintray.pkg.repo = 'BuildTesting' // used for testing
+  //bintray.pkg.repo = 'BuildTesting' // used for testing
 }
