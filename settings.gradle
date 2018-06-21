@@ -1,3 +1,5 @@
 rootProject.name = 'netflixoss-build-infrastructure'
 include 'netflixoss-plugin-common'
 include 'netflixoss-plugin-test'
+
+enableFeaturePreview("STABLE_PUBLISHING")
