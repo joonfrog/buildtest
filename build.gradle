@@ -21,7 +21,7 @@ plugins {
 
 allprojects {
   group = 'com.netflix.buildinfrastructure'
-  apply plugin: "LocalBintrayPublishPlugin"
+  apply plugin: LocalBintrayPublishPlugin
 }
 
 subprojects {   
