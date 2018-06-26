@@ -23,7 +23,6 @@ allprojects {
   group = 'com.netflix.buildinfrastructure'
   apply plugin: LocalBintrayPublishPlugin
   apply plugin: 'maven-publish'
-  bintray.pkg.repo = 'buildtest' // used for testing
   
   repositories {
     jcenter()
