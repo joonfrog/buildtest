@@ -24,20 +24,6 @@ allprojects {
   apply plugin: LocalBintrayPublishPlugin
 }
 
-subprojects {   
-
-  contacts {
-    "rob.spieldenner@gmail.com" {
-      moniker "Rob Spieldenner"
-      github "rspieldenner"
-    }
-  }
-
-  repositories {
-    jcenter()
-  }
-}
-
 allprojects {
   bintray.pkg.repo = 'BuildTesting' // used for testing
 }
