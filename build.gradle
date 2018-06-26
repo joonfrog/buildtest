@@ -47,7 +47,7 @@ allprojects {
  * Defaults for publishing the nebula-plugins on bintray
  */
 class LocalBintrayPublishPlugin implements Plugin<Project> {
-    private static Logger logger = Logging.getLogger(NebulaBintrayPublishingPlugin)
+    private static Logger logger = Logging.getLogger(LocalBintrayPublishPlugin)
 
     protected Project project
 
