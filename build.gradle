@@ -77,7 +77,7 @@ class LocalBintrayPublishPlugin implements Plugin<Project> {
             name = project.name
 
             repo = 'buildtest'
-            userOrg = 'joonfrog'
+            userOrg = 'joon-example'
             licenses = ['Apache-2.0']
             labels = ['gradle', 'joonfrog']
             websiteUrl = "https://github.com/joonfrog/${project.name}"
