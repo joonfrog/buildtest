@@ -26,7 +26,7 @@ import org.gradle.api.logging.Logging
 /**
  * Defaults for publishing the nebula-plugins on bintray
  */
-class NebulaBintrayPublishingPlugin implements Plugin<Project> {
+class LocalBintrayPublishPlugin implements Plugin<Project> {
     private static Logger logger = Logging.getLogger(NebulaBintrayPublishingPlugin)
 
     protected Project project
