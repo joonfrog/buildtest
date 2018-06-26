@@ -13,7 +13,7 @@ buildscript {
 
 allprojects {
   group = 'com.netflix.buildinfrastructure'
-  apply plugin: 'nebula.netflixoss' 
+  apply plugin: 'LocalBintrayPublishPlugin' 
 }
 
 subprojects {   
