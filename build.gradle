@@ -54,7 +54,7 @@ class LocalBintrayPublishPlugin implements Plugin<Project> {
             bintray.key = project.property('bintrayKey')
         }
         bintray.publish = true
-        bintray.publications = ['nebula']
+        bintray.publications = ['joonfrog']
         bintray.pkg {
             version {
                 name = project.getVersion()
@@ -76,10 +76,10 @@ class LocalBintrayPublishPlugin implements Plugin<Project> {
             desc = project.hasProperty('description') ? project.description : ''
             name = project.name
 
-            repo = 'gradle-plugins'
-            userOrg = 'nebula'
+            repo = 'buildtest'
+            userOrg = 'joonfrog'
             licenses = ['Apache-2.0']
-            labels = ['gradle', 'nebula']
+            labels = ['gradle', 'joonfrog']
             websiteUrl = "https://github.com/joonfrog/${project.name}"
             issueTrackerUrl = "https://github.com/joonfrog/${project.name}/issues"
             vcsUrl = "https://github.com/joonfrog/${project.name}.git"
