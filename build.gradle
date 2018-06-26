@@ -1,19 +1,25 @@
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.api.logging.Logger
+import org.gradle.api.logging.Logging
+
 buildscript {
   repositories {
-    jcenter()
-    maven { url 'https://plugins.gradle.org/m2/' }
     maven {
-      url  "https://dl.bintray.com/joon-example/buildtest"
+      url "https://plugins.gradle.org/m2/"
+    maven {
+      url  "https://dl.bintray.com/joon-example/buildtest"  
     }
   }
   dependencies {
-     classpath 'com.netflix.nebula:gradle-netflixoss-project-plugin:5.1.1-rc.1'
+    classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.3"
   }
 }
 
 allprojects {
   group = 'com.netflix.buildinfrastructure'
-  apply plugin: 'LocalBintrayPublishPlugin' 
+  apply plugin: "com.jfrog.bintray"
+  apply plugin: "LocalBintrayPublishPlugin"
 }
 
 subprojects {   
@@ -32,4 +38,67 @@ subprojects {
 
 allprojects {
   bintray.pkg.repo = 'BuildTesting' // used for testing
+}
+
+
+/**
+ * Defaults for publishing the nebula-plugins on bintray
+ */
+class LocalBintrayPublishPlugin implements Plugin<Project> {
+    private static Logger logger = Logging.getLogger(NebulaBintrayPublishingPlugin)
+
+    protected Project project
+
+    @Override
+    void apply(Project project) {
+        this.project = project
+
+        def bintrayUpload = addBintray(project)
+    }
+
+    BintrayUploadTask addBintray(Project project) {
+        // Bintray Side
+        project.plugins.apply(BintrayPlugin)
+        BintrayExtension bintray = project.extensions.getByType(BintrayExtension)
+        if (project.hasProperty('bintrayUser')) {
+            bintray.user = project.property('bintrayUser')
+            bintray.key = project.property('bintrayKey')
+        }
+        bintray.publish = true
+        bintray.publications = ['nebula']
+        bintray.pkg {
+            version {
+                name = project.getVersion()
+                vcsTag = "v${project.getVersion()}"
+                gpg {
+                    sign = true
+                }
+                if (project.hasProperty('sonatypeUsername') && project.hasProperty('sonatypePassword')) {
+                    def sonatypeUsername = project.property('sonatypeUsername')
+                    def sonatypePassword = project.property('sonatypePassword')
+                    mavenCentralSync {
+                        user = sonatypeUsername
+                        password = sonatypePassword
+                    }
+                }
+            }
+            publicDownloadNumbers = true
+
+            desc = project.hasProperty('description') ? project.description : ''
+            name = project.name
+
+            repo = 'gradle-plugins'
+            userOrg = 'nebula'
+            licenses = ['Apache-2.0']
+            labels = ['gradle', 'nebula']
+            websiteUrl = "https://github.com/nebula-plugins/${project.name}"
+            issueTrackerUrl = "https://github.com/nebula-plugins/${project.name}/issues"
+            vcsUrl = "https://github.com/nebula-plugins/${project.name}.git"
+        }
+
+        BintrayUploadTask bintrayUpload = (BintrayUploadTask) project.tasks.find { it instanceof BintrayUploadTask }
+        bintrayUpload.group = 'publishing'
+
+        bintrayUpload
+    }
 }
