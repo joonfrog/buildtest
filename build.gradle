@@ -8,7 +8,6 @@ import org.gradle.api.logging.Logging
 
 buildscript {
   repositories {
-    jcenter()
     maven {
       url "https://plugins.gradle.org/m2/"
       url  "https://dl.bintray.com/joon-example/buildtest"  
@@ -23,12 +22,13 @@ plugins {
 allprojects {
   group = 'com.netflix.buildinfrastructure'
   apply plugin: LocalBintrayPublishPlugin
-}
-
-allprojects {
   bintray.pkg.repo = 'BuildTesting' // used for testing
-}
+  
+  repositories {
+    jcenter()
+  }
 
+}
 
 /**
  * Defaults for publishing the nebula-plugins on bintray
