@@ -80,9 +80,9 @@ class LocalBintrayPublishPlugin implements Plugin<Project> {
             userOrg = 'nebula'
             licenses = ['Apache-2.0']
             labels = ['gradle', 'nebula']
-            websiteUrl = "https://github.com/nebula-plugins/${project.name}"
-            issueTrackerUrl = "https://github.com/nebula-plugins/${project.name}/issues"
-            vcsUrl = "https://github.com/nebula-plugins/${project.name}.git"
+            websiteUrl = "https://github.com/joonfrog/${project.name}"
+            issueTrackerUrl = "https://github.com/joonfrog/${project.name}/issues"
+            vcsUrl = "https://github.com/joonfrog/${project.name}.git"
         }
 
         BintrayUploadTask bintrayUpload = (BintrayUploadTask) project.tasks.find { it instanceof BintrayUploadTask }
