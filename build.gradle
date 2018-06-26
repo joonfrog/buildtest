@@ -10,14 +10,14 @@ buildscript {
       url  "https://dl.bintray.com/joon-example/buildtest"  
     }
   }
-  dependencies {
-    classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.1"
-  }
+}
+
+plugins {
+  id "com.jfrog.bintray" version "1.8.1"
 }
 
 allprojects {
   group = 'com.netflix.buildinfrastructure'
-  apply plugin: "com.jfrog.bintray"
   apply plugin: "LocalBintrayPublishPlugin"
 }
 
