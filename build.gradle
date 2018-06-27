@@ -16,7 +16,8 @@ buildscript {
 }
 
 plugins {
-  id "com.jfrog.bintray" version "1.8.1"
+  id "com.jfrog.bintray" version '1.8.1'
+  id 'nebula.netflixoss' version '5.1.0'
 }
 
 allprojects {
