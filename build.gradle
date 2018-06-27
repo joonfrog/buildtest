@@ -52,9 +52,9 @@ class LocalBintrayPublishPlugin implements Plugin<Project> {
 
     BintrayUploadTask addBintray(Project project) {
         //Test tasks
-        HashSet<BintrayUploadTask> tasks = project.getTasksByName(BintrayUploadTask.TASK_NAME, true
+        HashSet<BintrayUploadTask> tasks = project.getTasksByName(BintrayUploadTask.TASK_NAME, true)
         for (BintrayUploadTask task : tasks) {
-            System.out.println("Tasks : " + task.toString())
+            System.out.println("Tasks : " + task.name())
         }
     
         // Bintray Side
