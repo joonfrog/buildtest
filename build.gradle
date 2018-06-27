@@ -21,16 +21,13 @@ plugins {
 
 allprojects {
   group = 'com.netflix.buildinfrastructure'
+  apply plugin: LocalBintrayPublishPlugin
   apply plugin: 'maven-publish'
   
   repositories {
     jcenter()
   }
 
-}
-
-subprojects {
-  apply plugin: LocalBintrayPublishPlugin
 }
 
 /**
