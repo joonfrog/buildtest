@@ -31,10 +31,6 @@ allprojects {
 
 }
 
-subprojects {
-  apply plugin: 'nebula.netflixoss'
-}
-
 /**
  * Defaults for publishing the nebula-plugins on bintray
  */
