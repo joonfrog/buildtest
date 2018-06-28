@@ -8,10 +8,8 @@ import org.gradle.api.logging.Logging
 
 buildscript {
   repositories {
-    maven {
-      url "https://plugins.gradle.org/m2/"
-      url  "https://dl.bintray.com/joon-example/buildtest"  
-    }
+    maven { url "https://plugins.gradle.org/m2/" }
+    maven { url "https://dl.bintray.com/joon-example/buildtest" }
   }
 }
 
